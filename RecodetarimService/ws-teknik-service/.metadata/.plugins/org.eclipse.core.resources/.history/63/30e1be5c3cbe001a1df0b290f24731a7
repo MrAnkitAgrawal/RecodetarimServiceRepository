@@ -1,0 +1,5 @@
+package com.techie.recodetarim.domain.repositories;
+
+public interface FormsRepository {
+
+}

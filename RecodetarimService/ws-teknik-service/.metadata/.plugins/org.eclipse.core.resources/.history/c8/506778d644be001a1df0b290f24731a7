@@ -1,0 +1,49 @@
+package com.techie.recodetarim.domain.entities;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Entity
+@Table(name = "formsdetay")
+public class FormsDetay implements Serializable {
+	private static final long serialVersionUID = -1315988474181676605L;
+
+	@Id
+	@Column(name = "id")
+	private Long id;
+
+	@Column(name = "form_no")
+	private Long formNo;
+
+	@Column(name = "type")
+	private String type;
+
+	@Column(name = "default_value")
+	private String defaultValue;
+
+	@Column(name = "not_null")
+	private int notNull;
+
+	@Column(name = "title")
+	private String title;
+
+	protected FormsDetay() {
+	}
+
+	public FormsDetay(Long id, Long formNo, String type, String defaultValue, int notNull, String title) {
+		this.id = id;
+		this.formNo = formNo;
+		this.type = type;
+		this.defaultValue = defaultValue;
+		this.notNull = notNull;
+		this.title = title;
+	}
+}

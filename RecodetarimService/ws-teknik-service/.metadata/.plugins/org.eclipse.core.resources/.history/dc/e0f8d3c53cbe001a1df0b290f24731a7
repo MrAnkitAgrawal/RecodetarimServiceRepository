@@ -1,0 +1,12 @@
+package com.techie.recodetarim.services;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class RecodetarimService {
+	private FromsDetayR
+	
+	public String retrieveForms() {
+		return "Hello World!";
+	}
+}

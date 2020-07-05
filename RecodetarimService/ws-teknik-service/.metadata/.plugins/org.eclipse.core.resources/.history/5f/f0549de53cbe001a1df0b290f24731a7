@@ -1,0 +1,16 @@
+package com.techie.recodetarim.services;
+
+import org.springframework.stereotype.Service;
+
+import com.techie.recodetarim.domain.repositories.FormsRepository;
+
+@Service
+public class RecodetarimService {
+	private FormsRepository formsRepository;
+	
+	
+	
+	public String retrieveForms() {
+		return "Hello World!";
+	}
+}

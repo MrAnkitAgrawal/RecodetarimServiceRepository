@@ -1,0 +1,31 @@
+package com.techie.recodetarim;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import com.techie.recodetarim.domain.entities.Forms;
+import com.techie.recodetarim.domain.repositories.FormsRepository;
+
+@SpringBootApplication
+public class RecodetarimServiceApplication implements CommandLineRunner {
+	@Autowired
+	private FormsRepository formsRepository;
+	
+	public static void main(String[] args) {
+		SpringApplication.run(RecodetarimServiceApplication.class, args);
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
+		Forms form = new Forms(1l, 2l, "name", "jasperFormName");
+		formsRepository.save(forms);
+		
+		List<Forms> forms = formsRepository.findAll();
+		
+		
+	}
+}

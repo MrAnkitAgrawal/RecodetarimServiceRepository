@@ -1,0 +1,19 @@
+package com.techie.recodetarim;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import com.techie.recodetarim.domain.entities.Forms;
+import com.techie.recodetarim.domain.repositories.FormsRepository;
+
+@SpringBootApplication
+public class RecodetarimServiceApplication {
+	public static void main(String[] args) {
+		SpringApplication.run(RecodetarimServiceApplication.class, args);
+	}
+}
