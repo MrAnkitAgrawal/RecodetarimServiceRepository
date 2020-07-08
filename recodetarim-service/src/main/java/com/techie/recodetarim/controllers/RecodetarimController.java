@@ -1,6 +1,7 @@
 package com.techie.recodetarim.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,10 +45,10 @@ public class RecodetarimController {
 	}
 
 	@PostMapping("/formsdegerlendime")
-	public ResponseEntity<FormsDegerlendirmeDetails> saveFormsDegerlendirmeDetails(
+	public ResponseEntity<Map<String, Long>> saveFormsDegerlendirmeDetails(
 			@RequestBody FormsDegerlendirmeDetails formsDegerlendirmeDetails) {
-		recodetarimService.saveFormsDegerlendirmeDetails(formsDegerlendirmeDetails);
-		return new ResponseEntity<>(null, HttpStatus.CREATED);
+		Map<String, Long> degerIdMap = recodetarimService.saveFormsDegerlendirmeDetails(formsDegerlendirmeDetails);
+		return new ResponseEntity<>(degerIdMap, HttpStatus.CREATED);
 	}
 
 	@GetMapping("/formsdegerlendime")
