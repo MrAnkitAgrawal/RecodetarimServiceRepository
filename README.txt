@@ -10,12 +10,12 @@ How to Verify
 --------------
 1. Open POSTMAN
 2. Verify below GET and POST Endpoints:
-GET http://localhost:8282/recodetarim/forms
-GET http://localhost:8282/recodetarim/formsdetay
-GET http://localhost:8282/recodetarim/cari
-GET http://localhost:8282/recodetarim/formsdegerlendime/{id}
-GET http://localhost:8282/recodetarim/formsdegerlendime
-POST http://localhost:8282/recodetarim/formsdegerlendime
+GET http://localhost:8181/recodetarim/forms
+GET http://localhost:8181/recodetarim/formsdetay
+GET http://localhost:8181/recodetarim/cari
+GET http://localhost:8181/recodetarim/formsdegerlendime/{id}
+GET http://localhost:8181/recodetarim/formsdegerlendime
+POST http://localhost:8181/recodetarim/formsdegerlendime
 {
     "formsDegerlendirmeGenel": {
         "fisNo": 2,
