@@ -41,3 +41,9 @@ POST http://localhost:8282/recodetarim/formsdegerlendime
         }
     ]
 }
+
+SOURCE CODE:
+------------
+1. Location: https://github.com/MrAnkitAgrawal/RecodetarimServiceRepository/tree/master/recodetarim-service
+2. Prerequiste:
+	2.1 Configure Apache Maven 3.6.3 and Java 8
