@@ -1,7 +1,7 @@
 How to Deploy:
 --------------
 1. Download package (jar file) https://github.com/MrAnkitAgrawal/RecodetarimServiceRepository/tree/master/Artifacts
-2. Open Command Prompt and run below command (Java 8 must be configured on server
+2. Open Command Prompt and run below command (Java 8 must be configured on server)
 java -jar -DSERVER_PORT=8181 -DMYSQL_HOST=localhost -DMYSQL_PORT=3306 -DSCHEMA=recodetarim_schema -DMYSQL_USER=mysqluser -DMYSQL_PASSWD=password recodetarim-service-1.0.jar
 (Replace parameters with appropriate values)
 
