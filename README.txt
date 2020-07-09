@@ -21,7 +21,6 @@ Request:
 --------
 {
     "formsDegerlendirmeGenel": {
-        "id": null,
         "fisNo": 2,
         "formNo": 1,
         "yururlulukTarihi": "0001-01-03",
@@ -36,16 +35,23 @@ Request:
     },
     "formsDegerlendirmes": [
         {
-            "id": null,
             "formsDetayId": 5,
-            "deger": "t",
-            "genelId": null
+            "deger": "t"
         },
         {
-            "id": null,
             "formsDetayId": 12,
-            "deger": "true",
-            "genelId": null
+            "deger": "true"
+        }
+    ],
+    "signature": "<base64 encoded string>",
+    "formsDegerlendirmeImzas": [
+        {
+            "imageId": "ImageName",
+            "image": "<base64 encoded string>"
+        },
+        {
+           "imageId": "ImageName",
+           "image": "<base64 encoded string>"
         }
     ]
 }
@@ -54,7 +60,7 @@ Response:
 ---------
 {
     "formsDegerlendirmeGenel": {
-        "id": 38,
+        "id": 43,
         "fisNo": 2,
         "formNo": 1,
         "yururlulukTarihi": "0001-01-03",
@@ -69,16 +75,27 @@ Response:
     },
     "formsDegerlendirmes": [
         {
-            "id": 63,
+            "id": 73,
             "formsDetayId": 5,
             "deger": "t",
-            "genelId": 38
+            "genelId": 43
         },
         {
-            "id": 64,
+            "id": 74,
             "formsDetayId": 12,
             "deger": "true",
-            "genelId": 38
+            "genelId": 43
+        }
+    ],
+    "signature": "<base64 encoded string>",
+    "formsDegerlendirmeImzas": [
+        {
+            "imageId": "ImageName",
+            "image": "<base64 encoded string>"
+        },
+        {
+            "imageId": "ImageName",
+            "image": "<base64 encoded string>"
         }
     ]
 }
@@ -88,3 +105,21 @@ SOURCE CODE:
 1. Location: https://github.com/MrAnkitAgrawal/RecodetarimServiceRepository/tree/master/recodetarim-service
 2. Prerequiste:
 	2.1 Configure Apache Maven 3.6.3 and Java 8
+	
+
+DataBase Tables for Signature and Images:
+-----------------------------------------
+create table formsdegerlendirmeimza (
+	id int(10) unsigned NOT NULL AUTO_INCREMENT,
+	image_id varchar(255),
+	image MEDIUMBLOB,
+	genel_id int(11) DEFAULT NULL,   
+	primary key (id)
+);
+
+create table formsdegerlendirmeresim (
+	id int(10) unsigned NOT NULL AUTO_INCREMENT, 
+	signature MEDIUMBLOB, 
+	genel_id int(11) DEFAULT NULL,
+	primary key (id)
+);
