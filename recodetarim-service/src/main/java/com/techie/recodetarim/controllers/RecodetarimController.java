@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.techie.recodetarim.domain.entities.Cari;
 import com.techie.recodetarim.domain.entities.Forms;
 import com.techie.recodetarim.domain.entities.FormsDetay;
-import com.techie.recodetarim.services.FormsDegerlendirmeDetails;
+import com.techie.recodetarim.models.FormsDegerlendirmeDetails;
 import com.techie.recodetarim.services.RecodetarimService;
 
 @RestController
