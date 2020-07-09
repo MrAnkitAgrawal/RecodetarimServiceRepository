@@ -1,9 +1,7 @@
 package com.techie.recodetarim.services;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -54,9 +52,7 @@ public class RecodetarimService {
 	}
 
 	@Transactional
-	public Map<String, Long> saveFormsDegerlendirmeDetails(FormsDegerlendirmeDetails formsDegerlendirmeDetails) {
-		Map<String, Long> degerIdMap = new HashMap<>();
-
+	public FormsDegerlendirmeDetails saveFormsDegerlendirmeDetails(FormsDegerlendirmeDetails formsDegerlendirmeDetails) {
 		FormsDegerlendirmeGenel formsDegerlendirmeGenel = formsDegerlendirmeDetails.getFormsDegerlendirmeGenel();
 		if (formsDegerlendirmeGenel != null) {
 			formsDegerlendirmeGenelRepository.save(formsDegerlendirmeGenel);
@@ -70,8 +66,7 @@ public class RecodetarimService {
 			});
 		}
 
-		degerIdMap.put("FormsDegerlendirmeGenel.Id", formsDegerlendirmeGenel.getId());
-		return degerIdMap;
+		return formsDegerlendirmeDetails;
 	}
 
 	public FormsDegerlendirmeDetails getFormsDegerlendirmeDetails(Long genelId) {

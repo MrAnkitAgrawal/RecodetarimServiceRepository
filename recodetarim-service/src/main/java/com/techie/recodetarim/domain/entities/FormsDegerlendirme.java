@@ -9,8 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "formsdegerlendirme")
 public class FormsDegerlendirme implements Serializable {
@@ -19,7 +17,6 @@ public class FormsDegerlendirme implements Serializable {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonIgnore
 	private Long id;
 
 	@Column(name = "forms_detay_id")
@@ -29,7 +26,6 @@ public class FormsDegerlendirme implements Serializable {
 	private String deger;
 
 	@Column(name = "genel_id")
-	@JsonIgnore
 	private Long genelId;
 
 	public Long getId() {
