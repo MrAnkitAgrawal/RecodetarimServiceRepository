@@ -16,8 +16,12 @@ GET http://localhost:8181/recodetarim/cari
 GET http://localhost:8181/recodetarim/formsdegerlendime/{id}
 GET http://localhost:8181/recodetarim/formsdegerlendime
 POST http://localhost:8181/recodetarim/formsdegerlendime
+
+Request:
+--------
 {
     "formsDegerlendirmeGenel": {
+        "id": null,
         "fisNo": 2,
         "formNo": 1,
         "yururlulukTarihi": "0001-01-03",
@@ -32,12 +36,49 @@ POST http://localhost:8181/recodetarim/formsdegerlendime
     },
     "formsDegerlendirmes": [
         {
-            "formsDetayId": 8,
-            "deger": "e"
+            "id": null,
+            "formsDetayId": 5,
+            "deger": "t",
+            "genelId": null
         },
         {
+            "id": null,
             "formsDetayId": 12,
-            "deger": "flase"
+            "deger": "true",
+            "genelId": null
+        }
+    ]
+}
+
+Response:
+---------
+{
+    "formsDegerlendirmeGenel": {
+        "id": 38,
+        "fisNo": 2,
+        "formNo": 1,
+        "yururlulukTarihi": "0001-01-03",
+        "revizeNoTarih": "0001-01-03",
+        "adiSoyadi": "",
+        "adres": "",
+        "faaliyetAdresi": "",
+        "kapsamAltKapsam": "",
+        "kontrolor": "",
+        "proje": "",
+        "kontrolTarihi": "0001-01-03"
+    },
+    "formsDegerlendirmes": [
+        {
+            "id": 63,
+            "formsDetayId": 5,
+            "deger": "t",
+            "genelId": 38
+        },
+        {
+            "id": 64,
+            "formsDetayId": 12,
+            "deger": "true",
+            "genelId": 38
         }
     ]
 }
