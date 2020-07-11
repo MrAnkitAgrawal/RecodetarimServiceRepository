@@ -69,7 +69,11 @@ public class RecodetarimService {
 			FormsDegerlendirmeDetails formsDegerlendirmeDetails) {
 		FormsDegerlendirmeGenel formsDegerlendirmeGenel = formsDegerlendirmeDetails.getFormsDegerlendirmeGenel();
 		if (formsDegerlendirmeGenel != null) {
-			formsDegerlendirmeGenelRepository.save(formsDegerlendirmeGenel);
+			synchronized (this) {
+				Long maxFormNo = formsDegerlendirmeGenelRepository.retrieveMaxFormNo().orElse(0l);
+				formsDegerlendirmeGenel.setFormNo(++maxFormNo);
+				formsDegerlendirmeGenelRepository.save(formsDegerlendirmeGenel);
+			}
 		}
 
 		List<FormsDegerlendirme> formsDegerlendirmes = formsDegerlendirmeDetails.getFormsDegerlendirmes();
