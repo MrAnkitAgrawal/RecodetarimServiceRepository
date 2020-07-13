@@ -1,6 +1,8 @@
 package com.techie.recodetarim.controllers;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.techie.recodetarim.domain.entities.Cari;
 import com.techie.recodetarim.domain.entities.Forms;
 import com.techie.recodetarim.domain.entities.FormsDetay;
+import com.techie.recodetarim.domain.entities.User;
 import com.techie.recodetarim.models.FormsDegerlendirmeDetails;
 import com.techie.recodetarim.services.RecodetarimService;
 
@@ -58,5 +61,17 @@ public class RecodetarimController {
 	@GetMapping("/formsdegerlendime/{genelId}")
 	public FormsDegerlendirmeDetails getFormsDegerlendirmeDetails(@PathVariable Long genelId) {
 		return recodetarimService.getFormsDegerlendirmeDetails(genelId);
+	}
+
+	@PostMapping("/user")
+	public ResponseEntity<User> validateUserCredential(@RequestBody Map<String, String> userCredential) {
+		final String username = userCredential.get("kod");
+		final String password = userCredential.get("sifre");
+		Optional<User> userOptional = recodetarimService.retrieveUser(username, password);
+		if (userOptional.isPresent()) {
+			return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 	}
 }

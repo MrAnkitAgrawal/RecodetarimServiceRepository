@@ -17,6 +17,7 @@ import com.techie.recodetarim.domain.entities.FormsDegerlendirmeGenel;
 import com.techie.recodetarim.domain.entities.FormsDegerlendirmeImza;
 import com.techie.recodetarim.domain.entities.FormsDegerlendirmeResim;
 import com.techie.recodetarim.domain.entities.FormsDetay;
+import com.techie.recodetarim.domain.entities.User;
 import com.techie.recodetarim.domain.repositories.CariRepository;
 import com.techie.recodetarim.domain.repositories.FormsDegerlendirmeGenelRepository;
 import com.techie.recodetarim.domain.repositories.FormsDegerlendirmeImzaRepository;
@@ -26,6 +27,7 @@ import com.techie.recodetarim.domain.repositories.FormsDetayRepository;
 import com.techie.recodetarim.domain.repositories.FormsRepository;
 import com.techie.recodetarim.models.FormsDegerlendirmeDetails;
 import com.techie.recodetarim.models.FormsDegerlendirmeImzaDto;
+import com.techie.recodetarim.domain.repositories.UserRepository;
 
 @Service
 public class RecodetarimService {
@@ -36,13 +38,14 @@ public class RecodetarimService {
 	private FormsDegerlendirmeRepository formsDegerlendirmeRepository;
 	private FormsDegerlendirmeResimRepository formsDegerlendirmeResimRepository;
 	private FormsDegerlendirmeImzaRepository formsDegerlendirmeImzaRepository;
+	private UserRepository userRepository;
 
 	@Autowired
 	public RecodetarimService(FormsRepository formsRepository, FormsDetayRepository formsDetayRepository,
 			CariRepository cariRepository, FormsDegerlendirmeGenelRepository formsDegerlendirmeGenelRepository,
 			FormsDegerlendirmeRepository formsDegerlendirmeRepository,
 			FormsDegerlendirmeResimRepository formsDegerlendirmeResimRepository,
-			FormsDegerlendirmeImzaRepository formsDegerlendirmeImzaRepository) {
+			FormsDegerlendirmeImzaRepository formsDegerlendirmeImzaRepository, UserRepository userRepository) {
 		this.formsRepository = formsRepository;
 		this.formsDetayRepository = formsDetayRepository;
 		this.cariRepository = cariRepository;
@@ -50,6 +53,7 @@ public class RecodetarimService {
 		this.formsDegerlendirmeRepository = formsDegerlendirmeRepository;
 		this.formsDegerlendirmeResimRepository = formsDegerlendirmeResimRepository;
 		this.formsDegerlendirmeImzaRepository = formsDegerlendirmeImzaRepository;
+		this.userRepository = userRepository;
 	}
 
 	public List<Forms> retrieveForms() {
@@ -151,5 +155,9 @@ public class RecodetarimService {
 		});
 
 		return formsDegerlendirmeDetailsList;
+	}
+
+	public Optional<User> retrieveUser(final String userName, final String password) {
+		return userRepository.findByKodAndSifre(userName, password);
 	}
 }
