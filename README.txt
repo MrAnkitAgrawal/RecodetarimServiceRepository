@@ -5,6 +5,28 @@ How to Deploy:
 java -jar -DSERVER_PORT=8181 -DMYSQL_HOST=localhost -DMYSQL_PORT=3306 -DSCHEMA=recodetarim_schema -DMYSQL_USER=mysqluser -DMYSQL_PASSWD=password recodetarim-service-1.0.jar
 (Replace parameters with appropriate values)
 
+Login Implementation:
+---------------------
+Request:
+---------
+POST http://localhost:8181/recodetarim/user
+{
+    "kod": "PKT",
+    "sifre": "1234"
+}
+
+Response:
+---------
+Success:
+200 OK
+{
+    "kod": "PKT",
+    "ad": "PAKETLEME",
+    "soyad": "DEPARTMANI"
+}
+
+Failure:
+401 Unauthorized
 
 How to Verify
 --------------
