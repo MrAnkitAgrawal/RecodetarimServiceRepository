@@ -1,5 +1,6 @@
 package com.techie.recodetarim.services;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,19 +15,16 @@ import com.techie.recodetarim.domain.entities.Cari;
 import com.techie.recodetarim.domain.entities.Forms;
 import com.techie.recodetarim.domain.entities.FormsDegerlendirme;
 import com.techie.recodetarim.domain.entities.FormsDegerlendirmeGenel;
-import com.techie.recodetarim.domain.entities.FormsDegerlendirmeImza;
-import com.techie.recodetarim.domain.entities.FormsDegerlendirmeResim;
 import com.techie.recodetarim.domain.entities.FormsDetay;
 import com.techie.recodetarim.domain.entities.User;
 import com.techie.recodetarim.domain.repositories.CariRepository;
 import com.techie.recodetarim.domain.repositories.FormsDegerlendirmeGenelRepository;
-import com.techie.recodetarim.domain.repositories.FormsDegerlendirmeImzaRepository;
 import com.techie.recodetarim.domain.repositories.FormsDegerlendirmeRepository;
-import com.techie.recodetarim.domain.repositories.FormsDegerlendirmeResimRepository;
 import com.techie.recodetarim.domain.repositories.FormsDetayRepository;
 import com.techie.recodetarim.domain.repositories.FormsRepository;
 import com.techie.recodetarim.models.FormsDegerlendirmeDetails;
 import com.techie.recodetarim.models.FormsDegerlendirmeImzaDto;
+import com.techie.recodetarim.services.utility.FileUtility;
 import com.techie.recodetarim.domain.repositories.UserRepository;
 
 @Service
@@ -36,24 +34,22 @@ public class RecodetarimService {
 	private CariRepository cariRepository;
 	private FormsDegerlendirmeGenelRepository formsDegerlendirmeGenelRepository;
 	private FormsDegerlendirmeRepository formsDegerlendirmeRepository;
-	private FormsDegerlendirmeResimRepository formsDegerlendirmeResimRepository;
-	private FormsDegerlendirmeImzaRepository formsDegerlendirmeImzaRepository;
+
 	private UserRepository userRepository;
+	private FileUtility fileUtility;
 
 	@Autowired
 	public RecodetarimService(FormsRepository formsRepository, FormsDetayRepository formsDetayRepository,
 			CariRepository cariRepository, FormsDegerlendirmeGenelRepository formsDegerlendirmeGenelRepository,
-			FormsDegerlendirmeRepository formsDegerlendirmeRepository,
-			FormsDegerlendirmeResimRepository formsDegerlendirmeResimRepository,
-			FormsDegerlendirmeImzaRepository formsDegerlendirmeImzaRepository, UserRepository userRepository) {
+			FormsDegerlendirmeRepository formsDegerlendirmeRepository, UserRepository userRepository,
+			FileUtility fileUtility) {
 		this.formsRepository = formsRepository;
 		this.formsDetayRepository = formsDetayRepository;
 		this.cariRepository = cariRepository;
 		this.formsDegerlendirmeGenelRepository = formsDegerlendirmeGenelRepository;
 		this.formsDegerlendirmeRepository = formsDegerlendirmeRepository;
-		this.formsDegerlendirmeResimRepository = formsDegerlendirmeResimRepository;
-		this.formsDegerlendirmeImzaRepository = formsDegerlendirmeImzaRepository;
 		this.userRepository = userRepository;
+		this.fileUtility = fileUtility;
 	}
 
 	public List<Forms> retrieveForms() {
@@ -69,8 +65,8 @@ public class RecodetarimService {
 	}
 
 	@Transactional
-	public FormsDegerlendirmeDetails saveFormsDegerlendirmeDetails(
-			FormsDegerlendirmeDetails formsDegerlendirmeDetails) {
+	public FormsDegerlendirmeDetails saveFormsDegerlendirmeDetails(FormsDegerlendirmeDetails formsDegerlendirmeDetails)
+			throws IOException {
 		FormsDegerlendirmeGenel formsDegerlendirmeGenel = formsDegerlendirmeDetails.getFormsDegerlendirmeGenel();
 		if (formsDegerlendirmeGenel != null) {
 			synchronized (this) {
@@ -80,79 +76,53 @@ public class RecodetarimService {
 			}
 		}
 
-		List<FormsDegerlendirme> formsDegerlendirmes = formsDegerlendirmeDetails.getFormsDegerlendirmes();
-		if (formsDegerlendirmes != null) {
-			formsDegerlendirmes.forEach(formsDegerlendirme -> {
-				formsDegerlendirme.setGenelId(formsDegerlendirmeGenel.getId());
-				formsDegerlendirmeRepository.save(formsDegerlendirme);
-			});
-		}
+		long genelId = formsDegerlendirmeGenel.getId();
+		long fisNo = formsDegerlendirmeGenel.getFisNo();
+		long formNo = formsDegerlendirmeGenel.getFormNo();
 
-		String SignatuteStr = formsDegerlendirmeDetails.getSignature();
-		if (SignatuteStr != null) {
-			byte[] signatureBytes = formsDegerlendirmeDetails.getSignature().getBytes(StandardCharsets.ISO_8859_1);
-
-			FormsDegerlendirmeResim formsDegerlendirmeResim = new FormsDegerlendirmeResim();
-			formsDegerlendirmeResim.setSignature(signatureBytes);
-			formsDegerlendirmeResim.setGenelId(formsDegerlendirmeGenel.getId());
-			formsDegerlendirmeResimRepository.save(formsDegerlendirmeResim);
-		}
-
-		List<FormsDegerlendirmeImzaDto> formsDegerlendirmeImzaDtos = formsDegerlendirmeDetails
-				.getFormsDegerlendirmeImzas();
-		formsDegerlendirmeImzaDtos.forEach(formsDegerlendirmeImzaDto -> {
-			FormsDegerlendirmeImza formsDegerlendirmeImza = new FormsDegerlendirmeImza();
-			formsDegerlendirmeImza.setImageId(formsDegerlendirmeImzaDto.getImageId());
-			formsDegerlendirmeImza.setImage(formsDegerlendirmeImzaDto.getImage().getBytes(StandardCharsets.ISO_8859_1));
-			formsDegerlendirmeImza.setGenelId(formsDegerlendirmeGenel.getId());
-			formsDegerlendirmeImzaRepository.save(formsDegerlendirmeImza);
-		});
+		saveFormsDegerlendirmes(formsDegerlendirmeDetails, genelId);
+		saveSignature(formsDegerlendirmeDetails, genelId, fisNo, formNo);
+		saveImages(formsDegerlendirmeDetails, genelId, fisNo, formNo);
 
 		return formsDegerlendirmeDetails;
 	}
 
-	public FormsDegerlendirmeDetails getFormsDegerlendirmeDetails(Long genelId) {
+	public FormsDegerlendirmeDetails getFormsDegerlendirmeDetails(Long genelId) throws IOException {
 		FormsDegerlendirmeDetails formsDegerlendirmeDetails = new FormsDegerlendirmeDetails();
 
-		Optional<FormsDegerlendirmeGenel> formsDegerlendirmeGenelOptional = formsDegerlendirmeGenelRepository
+		Optional<FormsDegerlendirmeGenel> oFormsDegerlendirmeGenel = formsDegerlendirmeGenelRepository
 				.findById(genelId);
-		if (!formsDegerlendirmeGenelOptional.isPresent()) {
+		if (!oFormsDegerlendirmeGenel.isPresent()) {
 			return new FormsDegerlendirmeDetails();
 		}
-		formsDegerlendirmeDetails.setFormsDegerlendirmeGenel(formsDegerlendirmeGenelOptional.get());
 
+		FormsDegerlendirmeGenel formsDegerlendirmeGenel = oFormsDegerlendirmeGenel.get();
+		formsDegerlendirmeDetails.setFormsDegerlendirmeGenel(formsDegerlendirmeGenel);
+
+		// Retrieve and set FormsDegerlendirme list
 		List<FormsDegerlendirme> formsDegerlendirmes = formsDegerlendirmeRepository.findByGenelId(genelId);
 		formsDegerlendirmeDetails.setFormsDegerlendirmes(formsDegerlendirmes);
 
-		FormsDegerlendirmeResim formsDegerlendirmeResim = formsDegerlendirmeResimRepository.findByGenelId(genelId);
-		if (formsDegerlendirmeResim != null) {
-			byte[] signBytes = formsDegerlendirmeResim.getSignature();
-			String signature = new String(signBytes, StandardCharsets.ISO_8859_1);
+		// Retrieve and set signature
+		byte[] signatureBytes = fileUtility.retrieveSignature(genelId);
+		if (signatureBytes != null) {
+			String signature = new String(signatureBytes, StandardCharsets.ISO_8859_1);
 			formsDegerlendirmeDetails.setSignature(signature);
 		}
 
-		List<FormsDegerlendirmeImza> formsDegerlendirmeImzas = formsDegerlendirmeImzaRepository.findByGenelId(genelId);
-		if (formsDegerlendirmeImzas != null) {
-			formsDegerlendirmeImzas.forEach(formsDegerlendirmeImza -> {
-				FormsDegerlendirmeImzaDto FormsDegerlendirmeImzaDto = new FormsDegerlendirmeImzaDto();
-				FormsDegerlendirmeImzaDto.setImageId(formsDegerlendirmeImza.getImageId());
-
-				String image = new String(formsDegerlendirmeImza.getImage(), StandardCharsets.ISO_8859_1);
-				FormsDegerlendirmeImzaDto.setImage(image);
-				formsDegerlendirmeDetails.getFormsDegerlendirmeImzas().add(FormsDegerlendirmeImzaDto);
-			});
-		}
+		// Retrieve and set images
+		formsDegerlendirmeDetails.setFormsDegerlendirmeImzas(fileUtility.retrieveAllImages(genelId));
 
 		return formsDegerlendirmeDetails;
 	}
 
-	public List<FormsDegerlendirmeDetails> getAllFormsDegerlendirmeDetails() {
+	public List<FormsDegerlendirmeDetails> getAllFormsDegerlendirmeDetails() throws IOException {
 		List<FormsDegerlendirmeDetails> formsDegerlendirmeDetailsList = new ArrayList<>();
 
 		List<FormsDegerlendirmeGenel> formsDegerlendirmeGenels = formsDegerlendirmeGenelRepository.findAll();
-		formsDegerlendirmeGenels.forEach(formsDegerlendirmeGenel -> {
+		for (FormsDegerlendirmeGenel formsDegerlendirmeGenel : formsDegerlendirmeGenels) {
 			formsDegerlendirmeDetailsList.add(getFormsDegerlendirmeDetails(formsDegerlendirmeGenel.getId()));
-		});
+		}
 
 		return formsDegerlendirmeDetailsList;
 	}
@@ -160,4 +130,33 @@ public class RecodetarimService {
 	public Optional<User> retrieveUser(final String userName, final String password) {
 		return userRepository.findByKodAndSifre(userName, password);
 	}
+
+	private void saveImages(FormsDegerlendirmeDetails formsDegerlendirmeDetails, long genelId, long fisNo, long formNo)
+			throws IOException {
+		for (FormsDegerlendirmeImzaDto formsDegerlendirmeImzaDto : formsDegerlendirmeDetails
+				.getFormsDegerlendirmeImzas()) {
+			final String imageName = formsDegerlendirmeImzaDto.getImageId();
+			byte[] imageButes = formsDegerlendirmeImzaDto.getImage().getBytes(StandardCharsets.ISO_8859_1);
+			fileUtility.saveImage(genelId, fisNo, formNo, imageButes, imageName);
+		}
+	}
+
+	private void saveSignature(FormsDegerlendirmeDetails formsDegerlendirmeDetails, long genelId, long fisNo,
+			long formNo) throws IOException {
+		if (formsDegerlendirmeDetails.getSignature() != null) {
+			byte[] signatureBytes = formsDegerlendirmeDetails.getSignature().getBytes(StandardCharsets.ISO_8859_1);
+			fileUtility.saveSignature(genelId, fisNo, formNo, signatureBytes);
+		}
+	}
+
+	private void saveFormsDegerlendirmes(FormsDegerlendirmeDetails formsDegerlendirmeDetails, long genelId) {
+		List<FormsDegerlendirme> formsDegerlendirmes = formsDegerlendirmeDetails.getFormsDegerlendirmes();
+		if (formsDegerlendirmes != null) {
+			formsDegerlendirmes.forEach(formsDegerlendirme -> {
+				formsDegerlendirme.setGenelId(genelId);
+				formsDegerlendirmeRepository.save(formsDegerlendirme);
+			});
+		}
+	}
+
 }

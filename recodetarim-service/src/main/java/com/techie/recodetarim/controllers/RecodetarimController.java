@@ -1,5 +1,6 @@
 package com.techie.recodetarim.controllers;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -48,18 +49,18 @@ public class RecodetarimController {
 
 	@PostMapping("/formsdegerlendime")
 	public ResponseEntity<FormsDegerlendirmeDetails> saveFormsDegerlendirmeDetails(
-			@RequestBody FormsDegerlendirmeDetails formsDegerlendirmeDetails) {
+			@RequestBody FormsDegerlendirmeDetails formsDegerlendirmeDetails) throws IOException {
 		recodetarimService.saveFormsDegerlendirmeDetails(formsDegerlendirmeDetails);
 		return new ResponseEntity<>(formsDegerlendirmeDetails, HttpStatus.CREATED);
 	}
 
 	@GetMapping("/formsdegerlendime")
-	public List<FormsDegerlendirmeDetails> getAllFormsDegerlendirmeDetails() {
+	public List<FormsDegerlendirmeDetails> getAllFormsDegerlendirmeDetails() throws IOException {
 		return recodetarimService.getAllFormsDegerlendirmeDetails();
 	}
 
 	@GetMapping("/formsdegerlendime/{genelId}")
-	public FormsDegerlendirmeDetails getFormsDegerlendirmeDetails(@PathVariable Long genelId) {
+	public FormsDegerlendirmeDetails getFormsDegerlendirmeDetails(@PathVariable Long genelId) throws IOException {
 		return recodetarimService.getFormsDegerlendirmeDetails(genelId);
 	}
 

@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
@@ -23,9 +22,8 @@ public class FormsDegerlendirmeImza implements Serializable {
 	@Column(name = "image_id")
 	private String imageId;
 
-	@Lob
-	@Column(name = "image", columnDefinition = "BLOB")
-	private byte[] image;
+	@Column(name = "image")
+	private String image;
 
 	@Column(name = "genel_id")
 	private Long genelId;
@@ -46,11 +44,11 @@ public class FormsDegerlendirmeImza implements Serializable {
 		this.imageId = imageId;
 	}
 
-	public byte[] getImage() {
+	public String getImage() {
 		return image;
 	}
 
-	public void setImage(byte[] image) {
+	public void setImage(String image) {
 		this.image = image;
 	}
 
