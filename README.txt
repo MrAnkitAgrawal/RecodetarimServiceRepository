@@ -134,14 +134,14 @@ DataBase Tables for Signature and Images:
 create table formsdegerlendirmeimza (
 	id int(10) unsigned NOT NULL AUTO_INCREMENT,
 	image_id varchar(255),
-	image MEDIUMBLOB,
+	image varchar(255),
 	genel_id int(11) DEFAULT NULL,   
 	primary key (id)
 );
 
 create table formsdegerlendirmeresim (
 	id int(10) unsigned NOT NULL AUTO_INCREMENT, 
-	signature MEDIUMBLOB, 
+	signature varchar(255), 
 	genel_id int(11) DEFAULT NULL,
 	primary key (id)
 );
