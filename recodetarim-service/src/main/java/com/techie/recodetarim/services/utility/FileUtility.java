@@ -1,11 +1,11 @@
 package com.techie.recodetarim.services.utility;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64.Encoder;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +23,21 @@ public class FileUtility {
 	private ParametreRepository parametreRepository;
 	private FormsDegerlendirmeResimRepository formsDegerlendirmeResimRepository;
 	private FormsDegerlendirmeImzaRepository formsDegerlendirmeImzaRepository;
+	private Encoder base64Encoder;
 	private final String filePathStr;
 
+	private static final String JPG = ".jpg";
 	private static final String SIGNATURE = "imza";
 	private static final String KONTROL_FORM = "kontrolform";
 
 	@Autowired
 	public FileUtility(ParametreRepository parametreRepository,
 			FormsDegerlendirmeResimRepository formsDegerlendirmeResimRepository,
-			FormsDegerlendirmeImzaRepository formsDegerlendirmeImzaRepository) {
+			FormsDegerlendirmeImzaRepository formsDegerlendirmeImzaRepository, Encoder base64Encoder) {
 		this.parametreRepository = parametreRepository;
 		this.formsDegerlendirmeResimRepository = formsDegerlendirmeResimRepository;
 		this.formsDegerlendirmeImzaRepository = formsDegerlendirmeImzaRepository;
-
+		this.base64Encoder = base64Encoder;
 		filePathStr = this.parametreRepository.fetchFilePath();
 	}
 
@@ -51,7 +53,7 @@ public class FileUtility {
 					continue;
 				}
 
-				String image = new String(retrieveImage(imagePath), StandardCharsets.ISO_8859_1);
+				String image = base64Encoder.encodeToString(retrieveImage(imagePath));
 				FormsDegerlendirmeImzaDto FormsDegerlendirmeImzaDto = new FormsDegerlendirmeImzaDto();
 				FormsDegerlendirmeImzaDto.setImageId(imageName);
 				FormsDegerlendirmeImzaDto.setImage(image);
@@ -81,7 +83,7 @@ public class FileUtility {
 
 	private Path prepareImageFilePath(long fisNo, long formNo, final String imageName) throws IOException {
 		Path imageFilePath = Paths.get(filePathStr, KONTROL_FORM, String.valueOf(formNo));
-		String imageFileName = imageName;
+		String imageFileName = imageName + JPG;
 		return createFilePath(imageFilePath, imageFileName);
 	}
 
@@ -90,7 +92,7 @@ public class FileUtility {
 		if (formsDegerlendirmeResim == null) {
 			return null;
 		}
-		
+
 		final String signatureFilePath = formsDegerlendirmeResim.getSignature();
 		if (signatureFilePath == null) {
 			return null;
@@ -111,7 +113,7 @@ public class FileUtility {
 
 	private Path prepareSignatureFilePath(long fisNo, long formNo) throws IOException {
 		Path signatureFilePath = Paths.get(filePathStr, SIGNATURE);
-		final String signatureFileName = fisNo + "_" + formNo + "_sign";
+		final String signatureFileName = fisNo + "_" + formNo + "_sign" + JPG;
 		return createFilePath(signatureFilePath, signatureFileName);
 	}
 

@@ -1,8 +1,9 @@
 package com.techie.recodetarim.services;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -34,15 +35,16 @@ public class RecodetarimService {
 	private CariRepository cariRepository;
 	private FormsDegerlendirmeGenelRepository formsDegerlendirmeGenelRepository;
 	private FormsDegerlendirmeRepository formsDegerlendirmeRepository;
-
 	private UserRepository userRepository;
 	private FileUtility fileUtility;
+	private Decoder base64Decoder;
+	private Encoder base64Encoder;
 
 	@Autowired
 	public RecodetarimService(FormsRepository formsRepository, FormsDetayRepository formsDetayRepository,
 			CariRepository cariRepository, FormsDegerlendirmeGenelRepository formsDegerlendirmeGenelRepository,
 			FormsDegerlendirmeRepository formsDegerlendirmeRepository, UserRepository userRepository,
-			FileUtility fileUtility) {
+			FileUtility fileUtility, Decoder base64Decoder, Encoder base64Encoder) {
 		this.formsRepository = formsRepository;
 		this.formsDetayRepository = formsDetayRepository;
 		this.cariRepository = cariRepository;
@@ -50,6 +52,8 @@ public class RecodetarimService {
 		this.formsDegerlendirmeRepository = formsDegerlendirmeRepository;
 		this.userRepository = userRepository;
 		this.fileUtility = fileUtility;
+		this.base64Decoder = base64Decoder;
+		this.base64Encoder = base64Encoder;
 	}
 
 	public List<Forms> retrieveForms() {
@@ -106,7 +110,7 @@ public class RecodetarimService {
 		// Retrieve and set signature
 		byte[] signatureBytes = fileUtility.retrieveSignature(genelId);
 		if (signatureBytes != null) {
-			String signature = new String(signatureBytes, StandardCharsets.ISO_8859_1);
+			String signature = base64Encoder.encodeToString(signatureBytes);
 			formsDegerlendirmeDetails.setSignature(signature);
 		}
 
@@ -136,7 +140,7 @@ public class RecodetarimService {
 		for (FormsDegerlendirmeImzaDto formsDegerlendirmeImzaDto : formsDegerlendirmeDetails
 				.getFormsDegerlendirmeImzas()) {
 			final String imageName = formsDegerlendirmeImzaDto.getImageId();
-			byte[] imageButes = formsDegerlendirmeImzaDto.getImage().getBytes(StandardCharsets.ISO_8859_1);
+			byte[] imageButes = base64Decoder.decode(formsDegerlendirmeImzaDto.getImage());
 			fileUtility.saveImage(genelId, fisNo, formNo, imageButes, imageName);
 		}
 	}
@@ -144,7 +148,7 @@ public class RecodetarimService {
 	private void saveSignature(FormsDegerlendirmeDetails formsDegerlendirmeDetails, long genelId, long fisNo,
 			long formNo) throws IOException {
 		if (formsDegerlendirmeDetails.getSignature() != null) {
-			byte[] signatureBytes = formsDegerlendirmeDetails.getSignature().getBytes(StandardCharsets.ISO_8859_1);
+			byte[] signatureBytes = base64Decoder.decode(formsDegerlendirmeDetails.getSignature());
 			fileUtility.saveSignature(genelId, fisNo, formNo, signatureBytes);
 		}
 	}
